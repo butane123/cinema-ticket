@@ -1,0 +1,157 @@
+syntax = "v1"
+
+info(
+	title: ""
+	desc: ""
+	author: "butane"
+	email: "1127080666@qq.com"
+	version: ""
+)
+
+type (
+	LoginRequest {
+		Mobile   string `json:"mobile"`
+		Password string `json:"password"`
+	}
+	LoginResponse {
+		AccessToken  string `json:"accessToken"`
+		AccessExpire int64  `json:"accessExpire"`
+		RefreshAfter int64  `json:"refreshAfter"`
+	}
+	AdminLoginRequest {
+		Mobile   string `json:"mobile"`
+		Password string `json:"password"`
+	}
+	AdminLoginResponse {
+		AccessToken  string `json:"accessToken"`
+		AccessExpire int64  `json:"accessExpire"`
+		RefreshAfter int64  `json:"refreshAfter"`
+	}
+	RegisterRequest {
+		Name      string `json:"name"`
+		Gender    int64  `json:"gender"`
+		Mobile    string `json:"mobile"`
+		Email     string `json:"email"`
+		Password  string `json:"password"`
+		EmailCode string `json:"emailCode,optional"`
+		PhoneCode string `json:"phoneCode,optional"`
+	}
+	RegisterResponse {
+		Id int64 `json:"id"`
+	}
+	AdminRegisterRequest {
+		Name      string `json:"name"`
+		Gender    int64  `json:"gender"`
+		Mobile    string `json:"mobile"`
+		Email     string `json:"email"`
+		Password  string `json:"password"`
+		EmailCode string `json:"emailCode,optional"`
+		PhoneCode string `json:"phoneCode,optional"`
+	}
+	AdminRegisterResponse {
+		Id int64 `json:"id"`
+	}
+	UserInfoResponse {
+		Id     int64  `json:"id"`
+		Name   string `json:"name"`
+		Gender int64  `json:"gender"`
+		Email  string `json:"email"`
+		Mobile string `json:"mobile"`
+		Type   int64  `json:"type"`
+	}
+	EmailCodeSendRequest {
+		Email string `json:"email"`
+	}
+	EmailCodeSendResponse {
+	}
+	PhoneCodeSendRequest {
+		Phone string `json:"phone"`
+	}
+	PhoneCodeSendResponse {
+	}
+	RefreshAuthResponse {
+		AccessToken  string `json:"accessToken"`
+		AccessExpire int64  `json:"accessExpire"`
+		RefreshAfter int64  `json:"refreshAfter"`
+	}
+	UpdateInfoRequest {
+		Name   string `json:"name,optional"`
+		Gender int64  `json:"gender,optional"`
+		Mobile string `json:"mobile,optional"`
+		Email  string `json:"email,optional"`
+	}
+	UpdateInfoResponse {
+	}
+	UpdatePassRequest {
+		Password string `json:"password"`
+	}
+	UpdatePassResponse {
+	}
+)
+
+service User {
+	@doc(
+		summary: "用户登录"
+	)
+	@handler Login
+	post /user/login(LoginRequest) returns (LoginResponse)
+	
+	@doc(
+		summary: "管理员登录"
+	)
+	@handler AdminLogin
+	post /admin/login(AdminLoginRequest) returns (AdminLoginResponse)
+	
+	@doc(
+		summary: "用户注册"
+	)
+	@handler Register
+	post /user/register(RegisterRequest) returns (RegisterResponse)
+	
+	@doc(
+		summary: "管理员注册"
+	)
+	@handler AdminRegister
+	post /admin/register(AdminRegisterRequest) returns (AdminRegisterResponse)
+	
+	@doc(
+		summary: "邮箱验证码发送"
+	)
+	@handler EmailCodeSend
+	post /email/code/send (EmailCodeSendRequest) returns (EmailCodeSendResponse)
+	
+	@doc(
+		summary: "手机验证码发送"
+	)
+	@handler PhoneCodeSend
+	post /phone/code/send (PhoneCodeSendRequest) returns (PhoneCodeSendResponse)
+}
+
+@server(
+	jwt: Auth
+)
+service User {
+	@doc(
+		summary: "用户详情"
+	)
+	@handler UserInfo
+	post /user/userinfo returns (UserInfoResponse)
+	
+	@doc(
+		summary: "刷新Authorization"
+	)
+	@handler RefreshAuth
+	post /refresh/auth returns (RefreshAuthResponse)
+	
+	@doc(
+		summary: "用户信息修改"
+	)
+	@handler UpdateInfo
+	post /user/update/info (UpdateInfoRequest) returns (UpdateInfoResponse)
+	
+	@doc(
+		summary: "用户密码重置"
+	)
+	@handler UpdatePass
+	post /user/update/pass (UpdatePassRequest) returns (UpdatePassResponse)
+}

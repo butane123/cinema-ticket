@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package order;
+
+option go_package = "./order";
+
+message SetPaidReq{
+  int64 id = 1;
+}
+
+message SetPaidReply{
+}
+
+message JudgeExistReq{
+  int64 id = 1;
+}
+
+message JudgeExistReply{
+}
+
+message FindReq{
+  int64 id = 1;
+}
+
+message FindReply{
+  int64 amount = 1;
+}
+
+message CreateReq{
+  int64 id = 1;
+  int64 uid = 2;
+  int64 fid = 3;
+  int64 amount = 4;
+  int64 status = 5;
+}
+
+message CreateReply{
+  int64 id = 1;
+}
+service order {
+  rpc setPaid(SetPaidReq) returns(SetPaidReply);
+  rpc judgeExist(JudgeExistReq) returns(JudgeExistReply);
+  rpc findById(FindReq) returns(FindReply);
+  rpc create(CreateReq) returns(CreateReply);
+  rpc createRevert(CreateReq) returns(CreateReply);
+}

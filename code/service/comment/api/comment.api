@@ -1,0 +1,89 @@
+syntax = "v1"
+
+info(
+	title: ""
+	desc: ""
+	author: "butane"
+	email: "1127080666@qq.com"
+	version: ""
+)
+
+type (
+	CreateRequest {
+		Fid         int64  `json:"fid"`
+		Title       string `json:"title"`
+		Content     string `json:"content"`
+		IsAnonymous int64  `json:"isAnonymous"`
+	}
+	CreateResponse {
+		Id int64 `json:"id"`
+	}
+	UpdateRequest {
+		Id          int64  `json:"id"`
+		Fid         int64  `json:"fid,optional"`
+		Title       string `json:"title,optional"`
+		Content     string `json:"content,optional"`
+		IsAnonymous int64  `json:"isAnonymous,optional"`
+	}
+	UpdateResponse {
+	}
+	RemoveRequest {
+		Id int64 `json:"id"`
+	}
+	RemoveResponse {
+	}
+	DetailRequest {
+		Id int64 `json:"id"`
+	}
+	DetailResponse {
+		Fid         int64  `json:"fid"`
+		Title       string `json:"title"`
+		Content     string `json:"content"`
+		IsAnonymous int64  `json:"isAnonymous"`
+	}
+	ListResponse {
+		List []*UserComment `json:"list"`
+	}
+	UserComment {
+		Id          int64  `json:"id"`
+		Fid         int64  `json:"fid"`
+		Title       string `json:"title"`
+		Content     string `json:"content"`
+		IsAnonymous int64  `json:"isAnonymous"`
+	}
+)
+
+@server(
+	jwt: Auth
+)
+service Comment {
+	@doc(
+		summary: "评论创建"
+	)
+	@handler Create
+	post /comment/create(CreateRequest) returns (CreateResponse)
+
+	@doc(
+		summary: "评论修改"
+	)
+	@handler Update
+	post /comment/update(UpdateRequest) returns (UpdateResponse)
+
+	@doc(
+		summary: "评论删除"
+	)
+	@handler Remove
+	post /comment/remove(RemoveRequest) returns (RemoveResponse)
+
+	@doc(
+		summary: "评论详情"
+	)
+	@handler Detail
+	post /comment/detail(DetailRequest) returns (DetailResponse)
+
+	@doc(
+		summary: "评论列表"
+	)
+	@handler List
+	post /comment/list returns (ListResponse)
+}

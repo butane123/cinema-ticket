@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package film;
+
+option go_package = "./film";
+
+message JudgeExistReq{
+  int64 id = 1;
+}
+
+message JudgeExistReply{
+}
+
+message FindReq{
+  int64 id = 1;
+}
+
+message FindReply{
+  int64 stock = 1;
+}
+
+message DecStockReq{
+  int64 id = 1;
+}
+
+message DecStockReply{
+}
+service film {
+  rpc judgeExist(JudgeExistReq) returns(JudgeExistReply);
+  rpc findById(FindReq) returns(FindReply);
+  rpc decStock(DecStockReq) returns(DecStockReply);
+  rpc decStockRevert(DecStockReq) returns(DecStockReply);
+}

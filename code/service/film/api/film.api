@@ -1,0 +1,85 @@
+syntax = "v1"
+
+info(
+	title: ""
+	desc: ""
+	author: "butane"
+	email: "1127080666@qq.com"
+	version: ""
+)
+
+type (
+	CreateRequest {
+		Name         string `json:"name"`
+		Desc         string `json:"desc"`
+		Stock        int64  `json:"stock"`
+		Amount       int64  `json:"amount"`
+		Screenwriter string `json:"screenwriter"`
+		Director     string `json:"director"`
+		Length       int64  `json:"length"`
+		IsSelectSeat int64  `json:"isSelectSeat"`
+	}
+	CreateResponse {
+		Id int64 `json:"id"`
+	}
+	UpdateRequest {
+		Id           int64  `json:"id"`
+		Name         string `json:"name,optional"`
+		Desc         string `json:"desc,optional"`
+		Stock        int64  `json:"stock,optional"`
+		Amount       int64  `json:"amount,optional"`
+		Screenwriter string `json:"screenwriter,optional"`
+		Director     string `json:"director,optional"`
+		Length       int64  `json:"length,optional"`
+		IsSelectSeat int64  `json:"isSelectSeat,optional"`
+	}
+	UpdateResponse {
+	}
+	RemoveRequest {
+		Id int64 `json:"id"`
+	}
+	RemoveResponse {
+	}
+	DetailRequest {
+		Id int64 `json:"id"`
+	}
+	DetailResponse {
+		Name         string `json:"name"`
+		Desc         string `json:"desc"`
+		Stock        int64  `json:"stock"`
+		Amount       int64  `json:"amount"`
+		Screenwriter string `json:"screenwriter"`
+		Director     string `json:"director"`
+		Length       int64  `json:"length"`
+		IsSelectSeat int64  `json:"isSelectSeat"`
+	}
+)
+
+@server(
+	jwt: Auth
+)
+service Film {
+	@doc(
+		summary: "电影创建"
+	)
+	@handler Create
+	post /film/create(CreateRequest) returns (CreateResponse)
+	
+	@doc(
+		summary: "电影修改"
+	)
+	@handler Update
+	post /film/update(UpdateRequest) returns (UpdateResponse)
+	
+	@doc(
+		summary: "电影删除"
+	)
+	@handler Remove
+	post /film/remove(RemoveRequest) returns (RemoveResponse)
+	
+	@doc(
+		summary: "电影详情"
+	)
+	@handler Detail
+	post /film/detail(DetailRequest) returns (DetailResponse)
+}
