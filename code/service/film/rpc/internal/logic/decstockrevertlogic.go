@@ -1,8 +1,10 @@
 package logic
 
 import (
+	"cinema-ticket/common/utils"
 	"context"
 	"database/sql"
+	"strconv"
 
 	"github.com/dtm-labs/dtmgrpc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
@@ -37,12 +39,12 @@ func (l *DecStockRevertLogic) DecStockRevert(in *film.DecStockReq) (*film.DecSto
 		return nil, err
 	}
 	err = barrier.CallWithDB(db, func(tx *sql.Tx) error {
-		filmInfo, err := l.svcCtx.FilmModel.FindOne(l.ctx, in.Id)
+		_, err := l.svcCtx.FilmModel.TxUpdateStockWithLock(tx, 1, in.Id)
+		redisQueryKey := utils.CacheFilmKey + strconv.FormatInt(in.Id, 10)
+		_, err = l.svcCtx.RedisClient.Incrby(redisQueryKey, 1)
 		if err != nil {
 			return err
 		}
-		filmInfo.Stock = filmInfo.Stock + 1
-		err = l.svcCtx.FilmModel.TxUpdate(tx, filmInfo)
 		if err != nil {
 			return err
 		}

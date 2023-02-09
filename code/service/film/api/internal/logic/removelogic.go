@@ -2,7 +2,9 @@ package logic
 
 import (
 	"cinema-ticket/common/errorx"
+	"cinema-ticket/common/utils"
 	"context"
+	"strconv"
 
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 
@@ -37,6 +39,15 @@ func (l *RemoveLogic) Remove(req *types.RemoveRequest) (resp *types.RemoveRespon
 		return nil, err
 	}
 	err = l.svcCtx.FilmModel.Delete(l.ctx, req.Id)
+	if err != nil {
+		return nil, err
+	}
+	redisQueryKey := utils.CacheFilmKey + strconv.FormatInt(req.Id, 10)
+	_, err = l.svcCtx.RedisClient.Del(redisQueryKey)
+	if err != nil {
+		return nil, err
+	}
+	_, err = l.svcCtx.RedisClient.Del(utils.CacheStockKey + strconv.FormatInt(req.Id, 10))
 	if err != nil {
 		return nil, err
 	}

@@ -2,7 +2,9 @@ package logic
 
 import (
 	"cinema-ticket/common/errorx"
+	"cinema-ticket/common/utils"
 	"context"
+	"strconv"
 
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 
@@ -48,7 +50,13 @@ func (l *UpdateLogic) Update(req *types.UpdateRequest) (resp *types.UpdateRespon
 	if req.Status != 0 {
 		orderInfo.Status = req.Status
 	}
+	//先更新完数据库，然后删除缓存
 	err = l.svcCtx.OrderModel.Update(l.ctx, orderInfo)
+	if err != nil {
+		return nil, err
+	}
+	redisQueryKey := utils.CacheOrderKey + strconv.FormatInt(req.Id, 10)
+	_, err = l.svcCtx.RedisClient.Del(redisQueryKey)
 	if err != nil {
 		return nil, err
 	}

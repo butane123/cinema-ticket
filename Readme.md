@@ -27,6 +27,7 @@
 * 缓存：`Redis`
 * 本地环境：`Golang 1.18`
 * 容器管理：`Docker Compose`
+* 消息队列：`Kafka`(、`Zookeeper`)
 * 分布式系统管理：`Etcd`
 * 分布式事务：`DTM`
 * 服务监控：`Prometheus`、`Grafana`
@@ -42,7 +43,7 @@
 >
 > 使用jordan-wright写的email工具，进行邮箱验证码的发送
 >
-> 使用ApiFox工具，生成了在根目录下的接口测试导出文件cloud-disk.openapi.json，标准是openapi-3.0.1版本
+> 使用ApiFox工具，生成了在根目录下的接口测试导出文件cinema-ticket.openapi.json，标准是openapi-3.0.1版本
 >
 > 使用Goctl-Swagger插件，可以自行生成用于接口介绍的swagger网页
 
@@ -53,52 +54,34 @@ cinema-ticket
 ├─code //代码根目录
 │  ├─common //通用工具包
 │  │  ├─errorx
+│  │  ├─kqueue
 │  │  ├─response
 │  │  ├─scripts
 │  │  └─utils
-│  └──service //服务层
+│  └─service //服务层
 │     ├─advert //广告服务
 │     │  ├─api
-│     │  │  ├─etc
-│     │  │  └─internal
 │     │  ├─model
 │     │  └─rpc
 │     ├─comment //评论服务
 │     │  ├─api
-│     │  │  ├─etc
-│     │  │  └─internal
 │     │  ├─model
 │     │  └─rpc
 │     ├─film //电影服务
 │     │  ├─api
-│     │  │  ├─etc
-│     │  │  └─internal
 │     │  ├─model
 │     │  └─rpc
-│     │      ├─etc
-│     │      ├─filmclient
-│     │      ├─internal
-│     │      └─types
 │     ├─order //订单服务
 │     │  ├─api
-│     │  │  ├─etc
-│     │  │  └─internal
 │     │  ├─model
+│     │  ├─mq
 │     │  └─rpc
-│     │      ├─etc
-│     │      ├─internal
-│     │      ├─orderclient
-│     │      └─types
 │     ├─pay //支付流水服务
 │     │  ├─api
-│     │  │  ├─etc
-│     │  │  └─internal
 │     │  ├─model
 │     │  └─rpc
 │     └─user //用户服务
 │         ├─api
-│         │  ├─etc
-│         │  └─internal
 │         ├─model
 │         └─rpc
 └─images //ReadMe介绍图片
@@ -139,6 +122,9 @@ cinema-ticket
 
 
 ## 部分项目技术说明
+### 消息队列
+本项目使用吞吐量大、可用性高的Kafka作为消息队列。go-zero框架原生支持Kafka，可以简化许多配置。
+
 ### 分布式事务
 本项目在进行不同服务的DML操作，使用分布式事务保证数据一致性。DTM是一个开源的实现分布式事务的工具，基于SAGA 协议。
 
@@ -172,18 +158,19 @@ cinema-ticket
 * 运行redis，并配置相应的地址和端口号
 * ...同上，不再赘述，配置Mysql等在上面技术栈提及的相应技术
 ### 最后运行项目：
-* Linux环境直接运行脚本start.sh文件即可。
-* Windows环境，可以选择运行六个服务中的共8个yaml文件即可。（Linux环境也可以通过该方式运行项目）
+* Linux环境直接按顺序运行脚本startRpc.sh、startMQ.sh、start.sh文件即可。
+* Windows环境，可以选择运行六个服务中的共9个yaml文件即可。（Linux环境也可以通过该方式运行项目）
 
 ## 尚未完成的：
 * [x] ~~增加管理员模块，在原用户模块上修改~~
 * [x] ~~增加两个模块/服务：广告模块advert和评论模块comment~~
 * [x] ~~修改id为分布式全局统一id~~
-* [ ] 实现查询影票时的缓存优化，并解决带来的缓存击穿、缓存穿透等问题
-* [ ] 使用消息队列处理订单信息
-* [ ] 基于使用分布式锁实现秒杀功能
+* [x] ~~实现查询时的缓存优化，并解决带来的缓存击穿、缓存穿透等问题~~
+  * ~~主要针对于对普通用户可能查询量大的电影服务和订单服务~~
+* [x] ~~基于分布式锁和消息队列优化用户下单业务~~
 * [ ] 完善手机验证码功能
-* [ ] 考虑增填用户签到等功能模块
+* [ ] 考虑增填用户签到、优惠券等功能模块
+  
 
 
 ## 最后

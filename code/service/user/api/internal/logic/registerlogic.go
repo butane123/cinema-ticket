@@ -27,7 +27,7 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 
 func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.RegisterResponse, err error) {
 	//判断输入邮箱验证码是否正确
-	verificationCode, err := l.svcCtx.RedisClient.Get(req.Email)
+	verificationCode, err := l.svcCtx.RedisClient.Get(utils.CacheEmailCodeKey + req.Email)
 	if err != nil || verificationCode == "" {
 		return nil, errorx.NewCodeError(100, "无发送验证码或验证码已到期！")
 	}

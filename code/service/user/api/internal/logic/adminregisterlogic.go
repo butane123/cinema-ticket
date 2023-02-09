@@ -28,7 +28,7 @@ func NewAdminRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Adm
 
 func (l *AdminRegisterLogic) AdminRegister(req *types.AdminRegisterRequest) (resp *types.AdminRegisterResponse, err error) {
 	//判断输入邮箱验证码是否正确
-	verificationCode, err := l.svcCtx.RedisClient.Get(req.Email)
+	verificationCode, err := l.svcCtx.RedisClient.Get(utils.CacheEmailCodeKey + req.Email)
 	if err != nil || verificationCode == "" {
 		return nil, errorx.NewCodeError(100, "无发送验证码或验证码已到期！")
 	}

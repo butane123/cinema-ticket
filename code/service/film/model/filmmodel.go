@@ -20,8 +20,8 @@ type (
 	// and implement the added methods in customFilmModel.
 	FilmModel interface {
 		filmModel
-		TxUpdate(tx *sql.Tx, data *Film) error
 		InsertWithNewId(ctx context.Context, data *Film) (sql.Result, error)
+		TxUpdateStockWithLock(tx *sql.Tx, dec int64, id int64) (sql.Result, error)
 	}
 
 	customFilmModel struct {
@@ -45,11 +45,11 @@ func (m *defaultFilmModel) InsertWithNewId(ctx context.Context, data *Film) (sql
 	return ret, err
 }
 
-func (m *defaultFilmModel) TxUpdate(tx *sql.Tx, data *Film) error {
-	filmIdKey := fmt.Sprintf("%s%v", cacheFilmIdPrefix, data.Id)
-	_, err := m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, filmRowsWithPlaceHolder)
-		return tx.Exec(query, data.Name, data.Desc, data.Stock, data.Amount, data.Screenwriter, data.Director, data.Length, data.IsSelectSeat, data.Id)
+func (m *defaultFilmModel) TxUpdateStockWithLock(tx *sql.Tx, dec int64, id int64) (sql.Result, error) {
+	filmIdKey := fmt.Sprintf("%s%v", cacheFilmIdPrefix, id)
+	ret, err := m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("update %s set stock = stock + ?  where `id` = ? and `stock` > 0", m.table)
+		return tx.Exec(query, dec, id)
 	}, filmIdKey)
-	return err
+	return ret, err
 }

@@ -45,7 +45,7 @@ func GenerateNewId(redis *redis.Redis, keyPrefix string) int64 {
 	nowStamp := time.Now().Unix() - BeginTimeStamp
 	//调用lua脚本，获取当天累计序列号
 	nowDate := time.Now().Format("2006:01:02")
-	newKeyString := "icr:" + keyPrefix + ":" + nowDate
+	newKeyString := "cache:icr:" + keyPrefix + ":" + nowDate
 	//L := lua.NewState()
 	//defer L.Close()
 	//L.SetGlobal("getKeyString", L.NewFunction(func(L *lua.LState) int {

@@ -2,12 +2,10 @@ package logic
 
 import (
 	"cinema-ticket/common/utils"
-	"context"
-	"net/smtp"
-	"time"
-
 	"cinema-ticket/service/user/api/internal/svc"
 	"cinema-ticket/service/user/api/internal/types"
+	"context"
+	"net/smtp"
 
 	"github.com/jordan-wright/email"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -38,7 +36,7 @@ func (l *EmailCodeSendLogic) EmailCodeSend(req *types.EmailCodeSendRequest) (res
 	if err != nil {
 		return nil, err
 	}
-	err = l.svcCtx.RedisClient.Setex(req.Email, verificationCode, 300*int(time.Second))
+	err = l.svcCtx.RedisClient.Setex("cache:email:code:"+req.Email, verificationCode, utils.EmailCodeExpireSeconds)
 	if err != nil {
 		return nil, err
 	}

@@ -1,6 +1,6 @@
-Name: Order
+Name: order.mq
 Host: 0.0.0.0
-Port: 8002
+Port: 7002
 Mysql:
   DataSource: root:123456@tcp(mysql:3306)/cinema-ticket?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 Auth:
@@ -13,6 +13,11 @@ Redis:
 CacheRedis:
   - Host: redis:6379
     Pass:
+
+#dtm
+DtmServer: "etcd://etcd:2379/dtmservice"
+
+#rpc
 FilmRpc:
   Etcd:
     Hosts:
@@ -23,19 +28,27 @@ OrderRpc:
     Hosts:
       - etcd:2379
     Key: order.rpc
+
+#prometheus
 Prometheus:
   Host: 0.0.0.0
-  Port: 9082
+  Port: 9072
   Path: /metrics
+
+#jaeger
 Telemetry:
-  Name: order.api
+  Name: order.mq
   Endpoint: http://jaeger:14268/api/traces
   Sampler: 1.0
   Batcher: jaeger
-DtmServer: "etcd://etcd:2379/dtmservice"
 
-#kq producer
+#kq consumer
 KqOrderCreate:
+  Name: OrderCreate
   Brokers:
     - kafka:9092
+  Group: order-create-group
   Topic: order-create-topic
+  Offset: first
+  Consumers: 1
+  Processors: 1

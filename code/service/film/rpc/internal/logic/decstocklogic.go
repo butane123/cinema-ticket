@@ -43,18 +43,17 @@ func (l *DecStockLogic) DecStock(in *film.DecStockReq) (*film.DecStockReply, err
 		return nil, err
 	}
 	err = barrier.CallWithDB(db, func(tx *sql.Tx) error {
-		filmInfo, err := l.svcCtx.FilmModel.FindOne(l.ctx, in.Id)
+		res, err := l.svcCtx.FilmModel.TxUpdateStockWithLock(tx, -1, in.Id)
 		if err != nil {
 			return err
 		}
-		//库存不足，走回滚
-		if filmInfo.Stock == 0 {
+		rows, err := res.RowsAffected()
+		if err != nil {
+			return err
+		}
+		if rows == 0 {
+			//库存不足，走回滚
 			return dtmcli.ErrFailure
-		}
-		filmInfo.Stock = filmInfo.Stock - 1
-		err = l.svcCtx.FilmModel.TxUpdate(tx, filmInfo)
-		if err != nil {
-			return err
 		}
 		return nil
 	})

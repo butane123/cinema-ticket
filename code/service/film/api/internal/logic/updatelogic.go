@@ -2,9 +2,11 @@ package logic
 
 import (
 	"cinema-ticket/common/errorx"
+	"cinema-ticket/common/utils"
 	"cinema-ticket/service/film/api/internal/svc"
 	"cinema-ticket/service/film/api/internal/types"
 	"context"
+	"strconv"
 
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 
@@ -62,6 +64,17 @@ func (l *UpdateLogic) Update(req *types.UpdateRequest) (resp *types.UpdateRespon
 	err = l.svcCtx.FilmModel.Update(l.ctx, filmInfo)
 	if err != nil {
 		return nil, err
+	}
+	redisQueryKey := utils.CacheFilmKey + strconv.FormatInt(req.Id, 10)
+	_, err = l.svcCtx.RedisClient.Del(redisQueryKey)
+	if err != nil {
+		return nil, err
+	}
+	if req.Stock != 0 {
+		err = l.svcCtx.RedisClient.Set(utils.CacheStockKey+strconv.FormatInt(req.Id, 10), strconv.FormatInt(req.Stock, 10))
+		if err != nil {
+			return nil, err
+		}
 	}
 	return &types.UpdateResponse{}, nil
 }

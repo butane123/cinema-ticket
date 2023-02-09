@@ -6,6 +6,7 @@ import (
 	"cinema-ticket/service/film/api/internal/types"
 	"cinema-ticket/service/film/model"
 	"context"
+	"strconv"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -40,6 +41,10 @@ func (l *CreateLogic) Create(req *types.CreateRequest) (resp *types.CreateRespon
 		return nil, err
 	}
 	filmId, err := sqlRes.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+	err = l.svcCtx.RedisClient.Set(utils.CacheStockKey+strconv.FormatInt(filmId, 10), strconv.FormatInt(req.Stock, 10))
 	if err != nil {
 		return nil, err
 	}
