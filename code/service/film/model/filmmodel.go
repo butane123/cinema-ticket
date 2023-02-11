@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/Masterminds/squirrel"
+
 	"github.com/zeromicro/go-zero/core/stringx"
 
 	"github.com/zeromicro/go-zero/core/stores/cache"
@@ -22,6 +24,7 @@ type (
 		filmModel
 		InsertWithNewId(ctx context.Context, data *Film) (sql.Result, error)
 		TxUpdateStockWithLock(tx *sql.Tx, dec int64, id int64) (sql.Result, error)
+		FindOnSale(ctx context.Context) ([]*Film, error)
 	}
 
 	customFilmModel struct {
@@ -52,4 +55,22 @@ func (m *defaultFilmModel) TxUpdateStockWithLock(tx *sql.Tx, dec int64, id int64
 		return tx.Exec(query, dec, id)
 	}, filmIdKey)
 	return ret, err
+}
+
+func (m *defaultFilmModel) FindOnSale(ctx context.Context) ([]*Film, error) {
+	rowBuilder := m.RowBuilder()
+	query, values, err := rowBuilder.Where("stock > 0").ToSql()
+	var resp []*Film
+	err = m.QueryRowsNoCacheCtx(ctx, &resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	case sqlx.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+func (m *defaultFilmModel) RowBuilder() squirrel.SelectBuilder {
+	return squirrel.Select(filmRows).From(m.table)
 }

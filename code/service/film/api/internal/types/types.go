@@ -52,3 +52,18 @@ type DetailResponse struct {
 	Length       int64  `json:"length"`
 	IsSelectSeat int64  `json:"isSelectSeat"`
 }
+
+type SaleListResponse struct {
+	List []*Film `json:"list"`
+}
+
+type Film struct {
+	Name         string `json:"name"`
+	Desc         string `json:"desc"`
+	Stock        int64  `json:"stock"`
+	Amount       int64  `json:"amount"`
+	Screenwriter string `json:"screenwriter"`
+	Director     string `json:"director"`
+	Length       int64  `json:"length"`
+	IsSelectSeat int64  `json:"isSelectSeat"`
+}

@@ -2130,6 +2130,116 @@
         },
         "x-run-in-apifox": "https://www.apifox.cn/web/project/2234001/apis/api-60842206-run"
       }
+    },
+    "/order/paid/list": {
+      "post": {
+        "summary": "已支付订单列表",
+        "x-apifox-folder": "订单",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "订单"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NzU5ODU4OTAsImlhdCI6MTY3NTk1MjU1NywidXNlcklkIjoxNDc0MTgzMDk5ODQyNTYxfQ.5mpb9D18nBvA38XBtUaC68YRw2ROc89Fi0pciKgPxoI",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {},
+                "x-apifox-ignore-properties": [],
+                "x-apifox-orders": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": "404 page not found\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2234001/apis/api-61468224-run"
+      }
+    },
+    "/film/sale/list": {
+      "post": {
+        "summary": "在售影片列表",
+        "x-apifox-folder": "电影",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "电影"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NzU5ODU4OTAsImlhdCI6MTY3NTk1MjU1NywidXNlcklkIjoxNDc0MTgzMDk5ODQyNTYxfQ.5mpb9D18nBvA38XBtUaC68YRw2ROc89Fi0pciKgPxoI",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {},
+                "x-apifox-ignore-properties": [],
+                "x-apifox-orders": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2234001/apis/api-61468244-run"
+      }
     }
   },
   "components": {

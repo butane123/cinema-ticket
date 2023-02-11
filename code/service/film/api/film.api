@@ -53,6 +53,19 @@ type (
 		Length       int64  `json:"length"`
 		IsSelectSeat int64  `json:"isSelectSeat"`
 	}
+	SaleListResponse {
+		List []*Film `json:"list"`
+	}
+	Film {
+		Name         string `json:"name"`
+		Desc         string `json:"desc"`
+		Stock        int64  `json:"stock"`
+		Amount       int64  `json:"amount"`
+		Screenwriter string `json:"screenwriter"`
+		Director     string `json:"director"`
+		Length       int64  `json:"length"`
+		IsSelectSeat int64  `json:"isSelectSeat"`
+	}
 )
 
 @server(
@@ -82,4 +95,10 @@ service Film {
 	)
 	@handler Detail
 	post /film/detail(DetailRequest) returns (DetailResponse)
+	
+	@doc(
+		summary: "在售影片列表"
+	)
+	@handler SaleList
+	post /film/sale/list returns (SaleListResponse)
 }

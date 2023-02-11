@@ -23,6 +23,7 @@ type (
 	OrderModel interface {
 		orderModel
 		FindAllByUid(ctx context.Context, userId int64) ([]*Order, error)
+		FindAllPaidByUid(ctx context.Context, userId int64) ([]*Order, error)
 		FindLatestByUid(ctx context.Context, userId int64) (*Order, error)
 		TxInsert(tx *sql.Tx, data *Order) (sql.Result, error)
 		TxDelete(tx *sql.Tx, id int64) error
@@ -43,6 +44,21 @@ func NewOrderModel(conn sqlx.SqlConn, c cache.CacheConf) OrderModel {
 func (m *defaultOrderModel) FindAllByUid(ctx context.Context, userId int64) ([]*Order, error) {
 	rowBuilder := m.RowBuilder()
 	query, values, err := rowBuilder.Where("uid = ?", userId).ToSql()
+	var resp []*Order
+	err = m.QueryRowsNoCacheCtx(ctx, &resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	case sqlx.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
+func (m *defaultOrderModel) FindAllPaidByUid(ctx context.Context, userId int64) ([]*Order, error) {
+	rowBuilder := m.RowBuilder()
+	query, values, err := rowBuilder.Where("uid = ?", userId).Where("status = 1").ToSql()
 	var resp []*Order
 	err = m.QueryRowsNoCacheCtx(ctx, &resp, query, values...)
 	switch err {

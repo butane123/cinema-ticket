@@ -2,51 +2,33 @@
 
 ## 前言
 ### 项目基本介绍
+> 项目开源地址：[butane123/cinema-ticket: 一个基于go-zero框架的微服务影院票务系统cinema-ticket (github.com)](https://github.com/butane123/cinema-ticket)
+>
 > 这是一个微服务影院票务系统，基于go-zero框架实现，官网：[go-zero帮助文档](https://go-zero.dev/cn/docs/introduction)
-> 
-> **注意！！！本项目目前仍在制作中，可以看到模块介绍图、许多文字介绍部分什么的都还没画，这段时间作者会继续开搞的**
+
 ### 开发背景
+cinema-ticket的开发初衷，是通过设计一个自动化销售的影院票务系统，解决票务销售问题，为管理员提供一个井然有序的销售平台，使顾客能够更方便快捷地进行购票。
 
 ## 系统设计
-### 模块划分图
-
-### 服务划分图
-
-### 数据库ER图
-
-### 设计流程图
-
 ### 项目架构图
-
+![项目架构图](images/ProjectArchitectureDiagram.png)
 ### 业务架构图
-
+![业务架构图](images/BusinessArchitectureDiagram.png)
 
 ## 项目技术栈&开发环境
 * 服务端框架：`go-zero`
 * 数据库：`Mysql`
 * 缓存：`Redis`
 * 本地环境：`Golang 1.18`
-* 容器管理：`Docker Compose`
-* 消息队列：`Kafka`(、`Zookeeper`)
-* 分布式系统管理：`Etcd`
+* 容器管理：`Docker-Compose`
+* 消息队列：`Kafka`
+* 服务注册、发现中心：`Etcd`
 * 分布式事务：`DTM`
 * 服务监控：`Prometheus`、`Grafana`
 * 链路追踪：`Jaeger`
 
-使用的技术依赖有点多，建议使用docker配置虚拟环境（不过如果只是想要先跑动项目的话，只要配置redis、mysql、etcd就可以了）
 
-
-## 其他小插件说明
-> 使用JWT Token工具，生成了接口验证Auth的token，保证用户数据传输的安全
->
-> 使用Squirrel工具，在go-zero框架中简化了Sql语句的编写
->
-> 使用jordan-wright写的email工具，进行邮箱验证码的发送
->
-> 使用ApiFox工具，生成了在根目录下的接口测试导出文件cinema-ticket.openapi.json，标准是openapi-3.0.1版本
->
-> 使用Goctl-Swagger插件，可以自行生成用于接口介绍的swagger网页
-
+使用的技术依赖有点多，强烈建议使用docker配置虚拟环境（不过如果只是想要先跑动项目的话，只要配置redis、mysql、etcd就可以了）
 
 ## 项目目录树介绍
 ```text
@@ -116,9 +98,7 @@ cinema-ticket
 
 支付回调应用场景：
 
-例 ：用户支付成功->通过回调判断->数据库操作（设置订单已支付，流水完成）
-
-用户支付失败（或取消支付）->通过回调判断->跳转到支付失败页
+例 ：用户支付成功->通过回调判断->数据库操作（设置订单已支付，流水完成）； 用户支付失败（或取消支付）->通过回调判断->跳转到支付失败页
 
 
 ## 部分项目技术说明
@@ -162,15 +142,11 @@ cinema-ticket
 * Windows环境，可以选择运行六个服务中的共9个yaml文件即可。（Linux环境也可以通过该方式运行项目）
 
 ## 尚未完成的：
-* [x] ~~增加管理员模块，在原用户模块上修改~~
-* [x] ~~增加两个模块/服务：广告模块advert和评论模块comment~~
 * [x] ~~修改id为分布式全局统一id~~
 * [x] ~~实现查询时的缓存优化，并解决带来的缓存击穿、缓存穿透等问题~~
   * ~~主要针对于对普通用户可能查询量大的电影服务和订单服务~~
 * [x] ~~基于分布式锁和消息队列优化用户下单业务~~
 * [ ] 完善手机验证码功能
-* [ ] 考虑增填用户签到、优惠券等功能模块
-  
 
 
 ## 最后

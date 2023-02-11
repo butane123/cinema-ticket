@@ -40,10 +40,11 @@ type DetailResponse struct {
 	Status int64 `json:"status"`
 }
 
-type ListRequest struct {
+type ListResponse struct {
+	List []*UserOrder `json:"list"`
 }
 
-type ListResponse struct {
+type PaidListResponse struct {
 	List []*UserOrder `json:"list"`
 }
 

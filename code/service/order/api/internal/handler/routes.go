@@ -37,6 +37,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/order/list",
 				Handler: ListHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/order/paid/list",
+				Handler: PaidListHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 	)

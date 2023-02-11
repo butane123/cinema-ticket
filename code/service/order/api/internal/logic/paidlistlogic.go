@@ -11,26 +11,26 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type ListLogic struct {
+type PaidListLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
-	return &ListLogic{
+func NewPaidListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *PaidListLogic {
+	return &PaidListLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *ListLogic) List() (resp *types.ListResponse, err error) {
+func (l *PaidListLogic) PaidList() (resp *types.PaidListResponse, err error) {
 	userId, err := json.Number(fmt.Sprintf("%v", l.ctx.Value("userId"))).Int64()
 	if err != nil {
 		return nil, err
 	}
-	listInfo, err := l.svcCtx.OrderModel.FindAllByUid(l.ctx, userId)
+	listInfo, err := l.svcCtx.OrderModel.FindAllPaidByUid(l.ctx, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -44,5 +44,5 @@ func (l *ListLogic) List() (resp *types.ListResponse, err error) {
 			Status: order.Status,
 		})
 	}
-	return &types.ListResponse{List: list}, nil
+	return &types.PaidListResponse{List: list}, nil
 }

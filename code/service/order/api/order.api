@@ -40,9 +40,10 @@ type (
 		Amount int64 `json:"amount"`
 		Status int64 `json:"status"`
 	}
-	ListRequest {
-	}
 	ListResponse {
+		List []*UserOrder `json:"list"`
+	}
+	PaidListResponse {
 		List []*UserOrder `json:"list"`
 	}
 	UserOrder {
@@ -86,4 +87,10 @@ service Order {
 	)
 	@handler List
 	post /order/list returns (ListResponse)
+	
+	@doc(
+		summary: "已支付订单列表"
+	)
+	@handler PaidList
+	post /order/paid/list returns (PaidListResponse)
 }
